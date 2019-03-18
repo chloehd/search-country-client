@@ -24,11 +24,10 @@ class App extends Component {
 
   render() {
     return (
-
-        <body>
+        <div>
           <h2>Autocomplete</h2>
           <Search />
-        </body>
+        </div>
     );
   }
 }
