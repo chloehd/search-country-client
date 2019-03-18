@@ -18,8 +18,7 @@ class Search extends Component {
   }
 
   genericOnChange(event) {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+    this.setState({ countrySearch: event.target.value });
   }
 
 
@@ -44,14 +43,6 @@ class Search extends Component {
   // }
 
 
-  // handleSearch(event){
-  //   const {value} = event.target;
-  //   const filteredArray = countries.filter(
-  //       (oneCountry)=> oneCountry.name.toLowerCase().includes(value.toLowerCase())
-  //       )
-  //   this.setState({searchString: value, userCountries: filteredArray})
-
-
 
   render() {
     const { countryArray, countrySearch } = this.state;
@@ -69,7 +60,7 @@ class Search extends Component {
 
           <input
             onChange={event => this.genericOnChange(event)}
-            value={this.state.oneCountry}
+            value={this.state.countrySearch}
             name="countrySearch"
             type="text"
             //className="search-bar text-center w-100"
