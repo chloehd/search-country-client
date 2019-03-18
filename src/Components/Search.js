@@ -7,8 +7,9 @@ import { getCountries } from "../api.js";
 class Search extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      countryArray: [],
+      countries: {},
       countrySearch: ""
     };
   }
@@ -29,9 +30,8 @@ class Search extends Component {
       { withCredentials: true } // force axios to send cookies accross domains
       )
       .then(response => {
-        console.log("Countries List", response.data);
         // update our state array with the data from the API 
-        this.setState({ countryArray: response.data });
+        this.setState({ countries: response.data });
       })
       .catch(err => {
         console.log("Country List ERROR", err);
@@ -51,13 +51,15 @@ class Search extends Component {
 
 
   render() {
-    const { countryArray, countrySearch } = this.state;
+    const { countries, countrySearch } = this.state;
 
     const lowerSearch = countrySearch.toLowerCase();
-    const filteredArray = countryArray.filter(oneCountry => {
-      const lowerName = oneCountry.name.toLowerCase();
+    const filteredArray = countries.filter(oneCountry => {
+      const lowerName = oneCountry.toLowerCase();
       return lowerName.includes(lowerSearch);
-    });
+    })
+ 
+
 
     return (
       <section className="searchResult">
@@ -69,7 +71,6 @@ class Search extends Component {
             value={this.state.countrySearch}
             name="countrySearch"
             type="text"
-            //className="search-bar text-center w-100"
             placeholder="Search for a country"
             autoComplete="on"
           />
@@ -77,32 +78,28 @@ class Search extends Component {
 
         </form>
 
+        {countrySearch === "" ? null : (
+          <div className="countryList container">
+            <ul className="row d-flex justify-content-center">
+              {filteredArray.map(oneCountry => {
+                return (
+                  <li
+                    className="oneCountry col-lg-4 col-md-6 col-sm-12 w-100"
+                    key={oneCountry.name}
+                  >
+                    <div className="li-content">
+                      <p>{oneCountry.name}</p>
+                      </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       
       </section>
     );
   }
 }
-
-
-
-
-
-
-
-//     render() {
-//       const { searchString } = this.state;
-
-//       return (
-//         <label>
-//           Start typing:
-//        <input type="text" name="search" placeholder="Austria" value={searchString} />
-//           <button>Submit</button>
-//         </label>
-//       );
-//     }
-// }
-
-
-
 
 export default Search;
