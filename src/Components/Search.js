@@ -29,6 +29,7 @@ class Search extends Component {
     getCountries().then(response => {
       // SAVE the JSON data from the API into the state
       this.setState({ countryArray: response.data });
+      console.log("AAAAAAAAAAAAHHHHHHHHHH", response.data);
     });
   }
 
