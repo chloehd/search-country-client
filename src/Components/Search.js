@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import axios from "axios";
+import axios from "axios";
 import { getCountries } from "../api.js";
 
 
@@ -17,19 +17,25 @@ class Search extends Component {
     event.preventDefault();
   }
 
+  // retrieve value typed in input
   genericOnChange(event) {
     this.setState({ countrySearch: event.target.value });
   }
 
 
   componentDidMount() {
-    // CONNECTION FRONT & BACK is HERE :
-    // get data from our Express API (localhost:5555) (now in api.js)
-    getCountries().then(response => {
-      // SAVE the JSON data from the API into the state
-      this.setState({ countryArray: response.data });
-      console.log("AAAAAAAAAAAAHHHHHHHHHH", response.data);
-    });
+    axios.get(
+      "http://localhost:5000/api/countries",
+      { withCredentials: true } // force axios to send cookies accross domains
+      )
+      .then(response => {
+        console.log("Countries List", response.data);
+        // update our state array with the data from the API 
+        this.setState({ countryArray: response.data });
+      })
+      .catch(err => {
+        console.log("Country List ERROR", err);
+      });
   }
 
 
