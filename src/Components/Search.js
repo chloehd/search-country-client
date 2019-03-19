@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import { getCountries } from "../api.js";
-
 
 
 class Search extends Component {
@@ -9,7 +7,7 @@ class Search extends Component {
     super(props);
 
     this.state = {
-      countries: {},
+      countryList: [],
       countrySearch: ""
     };
   }
@@ -25,13 +23,14 @@ class Search extends Component {
 
 
   componentDidMount() {
+    // link to the data stocked in the back-end
     axios.get(
       "http://localhost:5000/api/countries",
-      { withCredentials: true } // force axios to send cookies accross domains
+      { withCredentials: true } 
       )
       .then(response => {
-        // update our state array with the data from the API 
-        this.setState({ countries: response.data });
+        // update the state array with the data from the API 
+        this.setState({ countryList: response.data });
       })
       .catch(err => {
         console.log("Country List ERROR", err);
@@ -39,33 +38,28 @@ class Search extends Component {
   }
 
 
-
-  //   axios.get("https://api.ipstack.com/check?access_key=a1d5abe0fd6709ed6ee80744cc29def2")
-  //   .then(response => {
-  //     console.log(response.data);
-
-  //   } )
-  //   .catch(err => console.log("Current Location Error", err))
-  // }
-
-
-
   render() {
-    const { countries, countrySearch } = this.state;
+    const { countrySearch } = this.state;
 
+    // avoid case-sensitive research
     const lowerSearch = countrySearch.toLowerCase();
-    const filteredArray = countries.filter(oneCountry => {
-      const lowerName = oneCountry.toLowerCase();
+    const filteredArray = function countriesSearch(countriesArray) {
+    countriesArray.filter(element => {
+      return element.name;
+    });
+
+    countriesArray.filter(oneCountry => {
+      const lowerName = oneCountry.name.toLowerCase();
       return lowerName.includes(lowerSearch);
     })
- 
 
+  }
+ 
 
     return (
       <section className="searchResult">
         <form onSubmit={event => this.handleSubmit(event)}>
         Start typing:
-
           <input
             onChange={event => this.genericOnChange(event)}
             value={this.state.countrySearch}
@@ -80,19 +74,23 @@ class Search extends Component {
 
         {countrySearch === "" ? null : (
           <div className="countryList container">
-            <ul className="row d-flex justify-content-center">
+            <ul>
+
+              {/* would like to map inside all countries 
+              in the json to show the one corresponding to the typed value
+              NOT WORKING
+              */}
               {filteredArray.map(oneCountry => {
-                return (
+                return ( 
                   <li
-                    className="oneCountry col-lg-4 col-md-6 col-sm-12 w-100"
                     key={oneCountry.name}
                   >
-                    <div className="li-content">
+                    <div>
                       <p>{oneCountry.name}</p>
                       </div>
                   </li>
-                );
-              })}
+                 );
+               })}
             </ul>
           </div>
         )}
